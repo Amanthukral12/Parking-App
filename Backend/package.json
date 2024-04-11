@@ -1,0 +1,15 @@
+{
+  "name": "parking-app-backend",
+  "version": "1.0.0",
+  "description": "This is a backend for the parking app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javaScript",
+    "backend"
+  ],
+  "author": "Aman Thukral",
+  "license": "ISC"
+}
