@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    parkings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Parking",
+      },
+    ],
   },
   { timestamps: true }
 );
