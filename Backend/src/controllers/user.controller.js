@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateAccessAndRefreshTokens } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
+
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, userName, password } = req.body;
   if (
@@ -106,7 +107,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
   };
-  res
+  return res
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
@@ -167,9 +168,53 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
   user.password = newPassword;
   await user.save({ validateBeforeSave: false });
-  res
+
+  return res
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully!"));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullName } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    { $set: { fullName: fullName ? fullName : req.user.fullName } },
+    { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Account details updated successfully"));
+});
+
+const updateUserProfilePhoto = asyncHandler(async (req, res) => {
+  const profilePhotoLocalPath = req.file?.path;
+  if (!profilePhotoLocalPath) {
+    throw new ApiError(400, "Profile Photo is missing");
+  }
+  const profilePhoto = await uploadOnCloudinary(
+    profilePhotoLocalPath,
+    "Parking-app/ProfilePhoto"
+  );
+
+  if (!profilePhoto.url) {
+    throw new ApiError(400, "Error while uploading profile photo");
+  }
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    { $set: { profilePhoto: profilePhoto.url } },
+    { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Profile photo successfully updated"));
 });
 
 export {
@@ -178,4 +223,7 @@ export {
   logoutUser,
   refreshAccessToken,
   changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
+  updateUserProfilePhoto,
 };
