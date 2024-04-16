@@ -1,4 +1,5 @@
 import { Parking } from "../models/parking.model.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -42,4 +43,45 @@ const addParking = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, parking, "Parking Added"));
 });
 
-export { addParking };
+const getParkings = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+
+  const parkings = await Parking.find({
+    owner: userId,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, parkings, "Parkings fetched successfully"));
+});
+
+const deleteParking = asyncHandler(async (req, res) => {
+  try {
+    const parking = await Parking.findById(req.params.id);
+    if (!parking) {
+      throw new ApiError(
+        401,
+        {},
+        "Error while deleting the parking. Please try again"
+      );
+    }
+    const parkingId = parking._id;
+    const user = await User.findById(req.user.id);
+    if (user) {
+      await user.parkings.pull(parkingId);
+      await user.save();
+    }
+    await Parking.deleteOne({ _id: parking._id });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Parking deleted successfully"));
+  } catch (error) {
+    throw new ApiError(
+      404,
+      {},
+      error || "Error while deleting the parking. Please try again"
+    );
+  }
+});
+
+export { addParking, getParkings, deleteParking };
