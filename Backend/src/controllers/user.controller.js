@@ -35,8 +35,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const user = await User.create({
     fullName,
-    profilePhoto: profilePhoto.url,
-    public_id: profilePhoto.public_id,
+    profilePhoto: profilePhoto?.url || "",
+    public_id: profilePhoto?.public_id || "",
     email,
     password,
     userName: userName.toLowerCase(),
@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "useName or email is required");
   }
 
-  const user = User.findOne({
+  const user = await User.findOne({
     $or: [{ userName }, { email }],
   });
   if (!user) {
@@ -72,7 +72,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const { accessToken, refreshToken } = generateAccessAndRefreshTokens(
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
 

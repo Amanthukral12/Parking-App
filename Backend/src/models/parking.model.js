@@ -4,12 +4,10 @@ const parkingSchema = new mongoose.Schema(
   {
     longitude: {
       type: String,
-      required: true,
       trim: true,
     },
     latitude: {
       type: String,
-      required: true,
       trim: true,
     },
     owner: {
@@ -28,9 +26,11 @@ const parkingSchema = new mongoose.Schema(
     pillarNumber: {
       type: String,
     },
-    parkingSlip: {
-      type: String,
-    },
+    parkingSlip: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );
