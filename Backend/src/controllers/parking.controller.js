@@ -3,7 +3,10 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 
 const addParking = asyncHandler(async (req, res) => {
   const { longitude, latitude, title, note, basementLevel, pillarNumber } =
@@ -23,7 +26,10 @@ const addParking = asyncHandler(async (req, res) => {
         parkingSlipImageLocalPath,
         "Parking-app/ParkingPhotos"
       );
-      parkingSlipImageList.push(result?.url);
+      parkingSlipImageList.push({
+        parkingSlipUrl: result?.url,
+        public_id: result?.public_id,
+      });
     }
   }
   const parking = await Parking.create({
@@ -65,11 +71,15 @@ const deleteParking = asyncHandler(async (req, res) => {
         "Error while deleting the parking. Please try again"
       );
     }
+
     const parkingId = parking._id;
     const user = await User.findById(req.user.id);
     if (user) {
       await user.parkings.pull(parkingId);
       await user.save();
+    }
+    for (let i = 0; i < parking.parkingSlip.length; i++) {
+      await deleteFromCloudinary(parking.parkingSlip[i].public_id);
     }
     await Parking.deleteOne({ _id: parking._id });
     return res

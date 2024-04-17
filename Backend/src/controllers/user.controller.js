@@ -25,7 +25,6 @@ const registerUser = asyncHandler(async (req, res) => {
     Array.isArray(req.files.profilePhoto) &&
     req.files.profilePhoto.length > 0
   ) {
-    console.log(req.files);
     profilePhotoLocalPath = req.files.profilePhoto[0].path;
   }
   const profilePhoto = await uploadOnCloudinary(
@@ -33,14 +32,16 @@ const registerUser = asyncHandler(async (req, res) => {
     "Parking-app/ProfilePhoto"
   );
 
-  const user = await User.create({
+  const user = new User({
     fullName,
-    profilePhoto: profilePhoto?.url || "",
-    public_id: profilePhoto?.public_id || "",
     email,
     password,
     userName: userName.toLowerCase(),
   });
+
+  await user.setProfilePhoto(profilePhoto?.url, profilePhoto?.public_id);
+
+  await user.save();
 
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"

@@ -29,7 +29,12 @@ const parkingSchema = new mongoose.Schema(
     },
     parkingSlip: [
       {
-        type: String,
+        parkingSlipUrl: {
+          type: String,
+        },
+        public_id: {
+          type: String,
+        },
       },
     ],
   },

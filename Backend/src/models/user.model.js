@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     profilePhoto: {
-      type: String,
+      profilePhotoUrl: { type: String },
+      public_id: { type: String },
     },
     password: {
       type: String,
@@ -76,6 +77,14 @@ userSchema.methods.generateRefreshToken = function () {
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
   );
+};
+
+userSchema.methods.setProfilePhoto = async function (
+  profilePhotoUrl,
+  public_id
+) {
+  this.profilePhoto = { profilePhotoUrl, public_id };
+  await this.save();
 };
 
 export const User = mongoose.model("User", userSchema);
