@@ -94,4 +94,57 @@ const deleteParking = asyncHandler(async (req, res) => {
   }
 });
 
-export { addParking, getParkings, deleteParking };
+const updateParking = asyncHandler(async (req, res) => {
+  const { longitude, latitude, title, note, basementLevel, pillarNumber } =
+    req.body;
+
+  const parkingId = req.params?.id;
+  let parking = await Parking.findById(parkingId);
+  if (!parking) {
+    throw new ApiError(404, {}, "No Parking found");
+  }
+
+  parking.longitude = longitude;
+  parking.latitude = latitude;
+  parking.title = title;
+  parking.note = note;
+  parking.basementLevel = basementLevel;
+  parking.pillarNumber = pillarNumber;
+
+  for (let i = 0; i < parking.parkingSlip.length; i++) {
+    await deleteFromCloudinary(parking.parkingSlip[i].public_id);
+  }
+
+  let parkingSlipImageList = [];
+
+  if (
+    req.files &&
+    Array.isArray(req.files.parkingSlip) &&
+    req.files.parkingSlip.length > 0
+  ) {
+    for (let i = 0; i < req.files.parkingSlip.length; i++) {
+      let parkingSlipImageLocalPath = req.files.parkingSlip[i].path;
+
+      let result = await uploadOnCloudinary(
+        parkingSlipImageLocalPath,
+        "Parking-app/ParkingPhotos"
+      );
+      parkingSlipImageList.push({
+        parkingSlipUrl: result?.url,
+        public_id: result?.public_id,
+      });
+    }
+  }
+
+  parking.parkingSlip = parkingSlipImageList;
+
+  await parking.save();
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, parking, "Parking details updated successfully")
+    );
+});
+
+export { addParking, getParkings, deleteParking, updateParking };
