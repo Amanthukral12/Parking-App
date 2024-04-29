@@ -8,7 +8,6 @@ export const authReducer = (state, action) => {
         user: action.payload,
       };
     case "REGISTER":
-      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         isAuthenticated: true,

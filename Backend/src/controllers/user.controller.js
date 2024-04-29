@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     fullName,
     email,
     password,
-    userName: userName.toLowerCase(),
+    userName,
   });
 
   await user.setProfilePhoto(profilePhoto?.url, profilePhoto?.public_id);
