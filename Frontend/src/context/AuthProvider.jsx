@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     };
     try {

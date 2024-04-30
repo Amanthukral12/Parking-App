@@ -2,22 +2,32 @@ import { useState } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 const Register = () => {
-  const { authState, register } = UserAuth();
+  const { register } = UserAuth();
   const [user, setUser] = useState({
     fullName: "",
     email: "",
     userName: "",
     password: "",
+    profilePhoto: null,
   });
-  const { fullName, email, userName, password } = user;
+  const { fullName, email, userName, password, profilePhoto } = user;
   const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
+  const onFileChange = (e) => {
+    setUser({ ...user, profilePhoto: e.target.files[0] });
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
+    const userWithPhoto = new FormData();
+    userWithPhoto.append("fullName", fullName);
+    userWithPhoto.append("email", email);
+    userWithPhoto.append("userName", userName);
+    userWithPhoto.append("password", password);
+    userWithPhoto.append("profilePhoto", profilePhoto);
+
     try {
-      await register({ fullName, email, userName, password });
+      await register(userWithPhoto);
       toast.success("User successfully created");
     } catch (error) {
-      console.error(error); // Log the error for debugging purposes
       if (error.response && error.response.data) {
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(
@@ -32,7 +42,7 @@ const Register = () => {
         }
         toast.error(errorMessage);
       } else {
-        toast.error(error.message); // Fallback to generic error message
+        toast.error(error.message);
       }
     }
   };
@@ -70,6 +80,7 @@ const Register = () => {
           onChange={onChange}
           name="password"
         />
+        <input type="file" name="profilePhoto" onChange={onFileChange} />
         <button type="submit">Register</button>
       </form>
     </>
