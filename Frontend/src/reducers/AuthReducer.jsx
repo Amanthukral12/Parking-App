@@ -15,11 +15,15 @@ export const authReducer = (state, action) => {
         loading: false,
       };
     case "LOGIN":
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload.data.accessToken);
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify(action.payload.data.user)
+      );
       return {
         ...state,
+        ...action.payload,
         isAuthenticated: true,
-        user: action.payload,
         loading: false,
       };
     default:

@@ -6,8 +6,10 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(authReducer, {
     token: localStorage.getItem("token"),
-    isAuthenticated: false,
-    user: null,
+    isAuthenticated: localStorage.getItem("userInfo") ? true : false,
+    user: localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
+      : null,
     loading: true,
     error: null,
   });
@@ -43,9 +45,37 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const login = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const res = await axios.post("/api/v1/users/login", formData, config);
+      authDispatch({
+        type: "LOGIN",
+        payload: res.data,
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ authState, authDispatch, register, loadUser }}
+      value={{
+        register,
+        loadUser,
+        login,
+        token: authState.token,
+        isAuthenticated: authState.isAuthenticated,
+        loading: authState.loading,
+        user: authState.user,
+        error: authState.error,
+      }}
     >
       {children}
     </AuthContext.Provider>
