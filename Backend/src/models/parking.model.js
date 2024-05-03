@@ -44,8 +44,10 @@ const parkingSchema = new mongoose.Schema(
 parkingSchema.post("save", async function (doc) {
   const user = await User.findById(doc.owner);
   if (user) {
-    user.parkings.push(doc._id);
-    await user.save();
+    if (!user.parkings.includes(doc._id)) {
+      user.parkings.push(doc._id);
+      await user.save();
+    }
   }
 });
 
