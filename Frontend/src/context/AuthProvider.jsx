@@ -64,12 +64,26 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      const res = await axios.post("/api/v1/users/logout");
+      authDispatch({
+        type: "LOGOUT",
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         register,
         loadUser,
         login,
+        logout,
         token: authState.token,
         isAuthenticated: authState.isAuthenticated,
         loading: authState.loading,
