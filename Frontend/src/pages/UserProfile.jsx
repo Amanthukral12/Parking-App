@@ -3,8 +3,10 @@ import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 
 const UserProfile = () => {
-  const { user, updateProfile } = UserAuth();
+  const { user, updateProfile, updatePassword } = UserAuth();
   const [fullName, setFullName] = useState(user.fullName);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPasswword] = useState("");
 
   useEffect(() => {
     setFullName(user.fullName);
@@ -14,6 +16,9 @@ const UserProfile = () => {
     try {
       e.preventDefault();
       await updateProfile({ fullName });
+      if (oldPassword && newPassword) {
+        await updatePassword({ oldPassword, newPassword });
+      }
       toast.success("User Updated successfully");
     } catch (error) {
       if (error.response && error.response.data) {
@@ -49,6 +54,16 @@ const UserProfile = () => {
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Enter old Password"
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Enter new Password"
+            onChange={(e) => setNewPasswword(e.target.value)}
           />
           <button type="submit">Update Profile</button>
         </form>

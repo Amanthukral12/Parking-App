@@ -88,6 +88,17 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const updatePassword = async (formData) => {
+    try {
+      const res = await axios.post("/api/v1/users/change-password", formData);
+      authDispatch({ type: "UPDATE_PASSWORD", payload: res.data });
+      return res;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +107,7 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         updateProfile,
+        updatePassword,
         token: authState.token,
         isAuthenticated: authState.isAuthenticated,
         loading: authState.loading,

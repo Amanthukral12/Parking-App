@@ -22,7 +22,7 @@ export const authReducer = (state, action) => {
       );
       return {
         ...state,
-        ...action.payload,
+        user: action.payload.data,
         isAuthenticated: true,
         loading: false,
       };
@@ -39,8 +39,10 @@ export const authReducer = (state, action) => {
       return {
         ...state,
         user: action.payload.data,
-        isAuthenticated: true,
-        loading: false,
+      };
+    case "UPDATE_PASSWORD":
+      return {
+        ...state,
       };
     default:
       state;
