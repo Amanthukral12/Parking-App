@@ -17,11 +17,11 @@ const AuthProvider = ({ children }) => {
   const loadUser = async () => {
     try {
       const res = await axios.get("/api/v1/users/current-user");
-      console.log(res);
       authDispatch({
         type: "USER_LOADED",
         payload: res.data,
       });
+      return res;
     } catch (error) {
       console.log(error);
     }
@@ -77,6 +77,17 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (formData) => {
+    try {
+      const res = await axios.patch("/api/v1/users/update-account", formData);
+      authDispatch({ type: "UPDATE_PROFILE", payload: res.data });
+      return res;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -84,6 +95,7 @@ const AuthProvider = ({ children }) => {
         loadUser,
         login,
         logout,
+        updateProfile,
         token: authState.token,
         isAuthenticated: authState.isAuthenticated,
         loading: authState.loading,

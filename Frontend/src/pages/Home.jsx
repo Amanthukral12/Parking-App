@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 const Home = () => {
-  const { logout } = UserAuth();
+  const { logout, isAuthenticated, user } = UserAuth();
+
   const navigate = useNavigate();
   const logoutHandler = async (e) => {
     e.preventDefault();
@@ -32,7 +33,18 @@ const Home = () => {
   return (
     <div>
       <div>Home</div>
-      <div onClick={logoutHandler}>Logout</div>
+      {isAuthenticated ? (
+        <p>
+          <Link to={"/update-account"}>{user.fullName}</Link>
+        </p>
+      ) : null}
+      {isAuthenticated ? (
+        <div onClick={logoutHandler}>Logout</div>
+      ) : (
+        <p>
+          <Link to={"/login"}>Login</Link>
+        </p>
+      )}
     </div>
   );
 };

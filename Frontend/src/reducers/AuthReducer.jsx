@@ -34,6 +34,14 @@ export const authReducer = (state, action) => {
         user: null,
         loading: false,
       };
+    case "UPDATE_PROFILE":
+      localStorage.setItem("userInfo", JSON.stringify(action.payload.data));
+      return {
+        ...state,
+        user: action.payload.data,
+        isAuthenticated: true,
+        loading: false,
+      };
     default:
       state;
   }
