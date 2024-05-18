@@ -13,6 +13,7 @@ import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import ParkingProvider from "./context/ParkingProvider.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +29,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ParkingProvider>
+        <RouterProvider router={router} />
+      </ParkingProvider>
     </AuthProvider>
   </React.StrictMode>
 );
