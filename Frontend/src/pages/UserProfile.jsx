@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
-
+import { Link } from "react-router-dom";
 const UserProfile = () => {
   const { user, updateProfile, updatePassword, updateProfileImage } =
     UserAuth();
@@ -70,6 +70,9 @@ const UserProfile = () => {
   };
   return (
     <div>
+      <p>
+        <Link to={"/"}>Home</Link>
+      </p>
       <section>
         <img src={user.profilePhoto.profilePhotoUrl} alt="user profile photo" />
         <input type="file" name="profilePhoto" onChange={onFileChange} />

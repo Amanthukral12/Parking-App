@@ -22,7 +22,7 @@ export const authReducer = (state, action) => {
       );
       return {
         ...state,
-        user: action.payload.data,
+        user: action.payload.data.user,
         isAuthenticated: true,
         loading: false,
       };
