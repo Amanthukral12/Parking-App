@@ -3,7 +3,8 @@ import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 
 const UserProfile = () => {
-  const { user, updateProfile, updatePassword } = UserAuth();
+  const { user, updateProfile, updatePassword, updateProfileImage } =
+    UserAuth();
   const [fullName, setFullName] = useState(user.fullName);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPasswword] = useState("");
@@ -11,6 +12,34 @@ const UserProfile = () => {
   useEffect(() => {
     setFullName(user.fullName);
   }, [user.fullName]);
+
+  const onFileChange = async (e) => {
+    try {
+      e.preventDefault();
+      const profilePhoto = e.target.files[0];
+      await updateProfileImage({ profilePhoto });
+      e.target.value = null;
+      toast.success("Profile Photo updated");
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(
+          error.response.data,
+          "text/html"
+        );
+        let errorMessage = htmlDoc.body.textContent.trim();
+        const index = errorMessage.indexOf("at");
+        if (index !== -1) {
+          errorMessage = errorMessage.substring(0, index);
+          errorMessage = errorMessage.replace("Error: ", "");
+        }
+        e.target.value = null;
+        toast.error(errorMessage);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
 
   const onSubmit = async (e) => {
     try {
@@ -43,6 +72,7 @@ const UserProfile = () => {
     <div>
       <section>
         <img src={user.profilePhoto.profilePhotoUrl} alt="user profile photo" />
+        <input type="file" name="profilePhoto" onChange={onFileChange} />
         <p>{user.userName}</p>
         <p>{user.fullName}</p>
         <p>{user.email}</p>

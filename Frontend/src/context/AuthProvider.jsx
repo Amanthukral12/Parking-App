@@ -99,6 +99,26 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfileImage = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    try {
+      const res = await axios.patch(
+        "/api/v1/users/profilePhoto",
+        formData,
+        config
+      );
+      authDispatch({ type: "UPDATE_PROFILE_IMAGE", payload: res.data });
+      return res;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -108,6 +128,7 @@ const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         updatePassword,
+        updateProfileImage,
         token: authState.token,
         isAuthenticated: authState.isAuthenticated,
         loading: authState.loading,

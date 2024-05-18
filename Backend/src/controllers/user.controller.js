@@ -1,7 +1,10 @@
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateAccessAndRefreshTokens } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
@@ -195,7 +198,10 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserProfilePhoto = asyncHandler(async (req, res) => {
+  let oldUserProfilePhoto = req.user.profilePhoto;
+
   const profilePhotoLocalPath = req.file?.path;
+
   if (!profilePhotoLocalPath) {
     throw new ApiError(400, "Profile Photo is missing");
   }
@@ -204,14 +210,21 @@ const updateUserProfilePhoto = asyncHandler(async (req, res) => {
     "Parking-app/ProfilePhoto"
   );
 
+  let userProfilePhoto = {
+    profilePhotoUrl: profilePhoto?.url,
+    public_id: profilePhoto?.public_id,
+  };
+
   if (!profilePhoto.url) {
     throw new ApiError(400, "Error while uploading profile photo");
   }
   const user = await User.findByIdAndUpdate(
     req.user?._id,
-    { $set: { profilePhoto: profilePhoto.url } },
+    { $set: { profilePhoto: userProfilePhoto } },
     { new: true }
   ).select("-password");
+
+  await deleteFromCloudinary(oldUserProfilePhoto.public_id);
 
   return res
     .status(200)

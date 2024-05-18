@@ -44,6 +44,12 @@ export const authReducer = (state, action) => {
       return {
         ...state,
       };
+    case "UPDATE_PROFILE_IMAGE":
+      localStorage.setItem("userInfo", JSON.stringify(action.payload.data));
+      return {
+        ...state,
+        user: action.payload.data,
+      };
     default:
       state;
   }
