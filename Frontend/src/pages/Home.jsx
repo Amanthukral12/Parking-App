@@ -1,8 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
+import { UserParking } from "../context/ParkingProvider.jsx";
+import { useEffect } from "react";
 const Home = () => {
   const { logout, isAuthenticated, user } = UserAuth();
+  const { parkings, getAllParkings } = UserParking();
 
   const navigate = useNavigate();
   const logoutHandler = async (e) => {
@@ -30,6 +33,12 @@ const Home = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAllParkings();
+    }
+  }, [getAllParkings, isAuthenticated]);
   return (
     <div>
       <div>Home</div>
@@ -45,6 +54,15 @@ const Home = () => {
           <Link to={"/login"}>Login</Link>
         </p>
       )}
+      {isAuthenticated ? (
+        <div>
+          {parkings.map((parking) => (
+            <div key={parking._id}>
+              <p>{parking.title}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 };
