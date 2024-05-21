@@ -44,8 +44,23 @@ const ParkingProvider = ({ children }) => {
     }
   };
 
+  const deleteParking = async (id) => {
+    try {
+      await axios.delete(`/api/v1/parkings/${id}`);
+      parkingDispatch({
+        type: "DELETE_PARKING",
+        payload: id,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
-    <ParkingContext.Provider value={{ parkings, getAllParkings, addParking }}>
+    <ParkingContext.Provider
+      value={{ parkings, getAllParkings, addParking, deleteParking }}
+    >
       {children}
     </ParkingContext.Provider>
   );

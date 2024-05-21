@@ -8,7 +8,13 @@ export const parkingReducer = (state, action) => {
       localStorage.setItem("parkings", JSON.stringify(updatedParkings));
       return updatedParkings;
     }
-
+    case "DELETE_PARKING": {
+      const updatedParkings = state.filter(
+        (parking) => parking._id !== action.payload
+      );
+      localStorage.setItem("parkings", JSON.stringify(updatedParkings));
+      return updatedParkings;
+    }
     default:
       state;
   }

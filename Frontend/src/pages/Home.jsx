@@ -5,7 +5,7 @@ import { UserParking } from "../context/ParkingProvider.jsx";
 import { useEffect } from "react";
 const Home = () => {
   const { logout, isAuthenticated, user } = UserAuth();
-  const { parkings, getAllParkings } = UserParking();
+  const { parkings, getAllParkings, deleteParking } = UserParking();
 
   const navigate = useNavigate();
   const logoutHandler = async (e) => {
@@ -39,6 +39,30 @@ const Home = () => {
       getAllParkings();
     }
   }, [getAllParkings, isAuthenticated]);
+
+  const deleteParkingHandler = async (id) => {
+    try {
+      await deleteParking(id);
+      toast.success("Parking successfully deleted");
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(
+          error.response.data,
+          "text/html"
+        );
+        let errorMessage = htmlDoc.body.textContent.trim();
+        const index = errorMessage.indexOf("at");
+        if (index !== -1) {
+          errorMessage = errorMessage.substring(0, index);
+          errorMessage = errorMessage.replace("Error: ", "");
+        }
+        toast.error(errorMessage);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
   return (
     <div>
       <div>Home</div>
@@ -64,6 +88,9 @@ const Home = () => {
           {parkings.map((parking) => (
             <div key={parking._id}>
               <p>{parking.title}</p>
+              <button onClick={() => deleteParkingHandler(parking._id)}>
+                Delete Parking
+              </button>
             </div>
           ))}
         </div>
