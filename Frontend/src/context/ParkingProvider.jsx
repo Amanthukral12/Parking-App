@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
+import { createContext, useContext, useReducer, useCallback } from "react";
 import { parkingReducer } from "../reducers/ParkingReducer.jsx";
 import axios from "axios";
 
@@ -15,10 +8,6 @@ const ParkingProvider = ({ children }) => {
     const localData = localStorage.getItem("parkings");
     return localData ? JSON.parse(localData) : [];
   });
-
-  useEffect(() => {
-    localStorage.setItem("parkings", JSON.stringify(parkings));
-  }, [parkings]);
 
   const getAllParkings = useCallback(async () => {
     try {
@@ -33,16 +22,30 @@ const ParkingProvider = ({ children }) => {
     }
   }, []);
 
-  const contextValue = useMemo(
-    () => ({
-      parkings,
-      getAllParkings,
-    }),
-    [parkings, getAllParkings]
-  );
+  const addParking = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    try {
+      const res = await axios.post(
+        "/api/v1/parkings/add-parking",
+        formData,
+        config
+      );
+      parkingDispatch({
+        type: "ADD_PARKING",
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 
   return (
-    <ParkingContext.Provider value={contextValue}>
+    <ParkingContext.Provider value={{ parkings, getAllParkings, addParking }}>
       {children}
     </ParkingContext.Provider>
   );

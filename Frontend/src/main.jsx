@@ -14,6 +14,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import ParkingProvider from "./context/ParkingProvider.jsx";
+import AddParking from "./pages/AddParking.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/update-account" element={<UserProfile />} />
+      <Route path="/add-parking" element={<AddParking />} />
     </Route>
   )
 );

@@ -48,6 +48,11 @@ const Home = () => {
         </p>
       ) : null}
       {isAuthenticated ? (
+        <button>
+          <Link to={"/add-parking"}>Add New Parking</Link>
+        </button>
+      ) : null}
+      {isAuthenticated ? (
         <div onClick={logoutHandler}>Logout</div>
       ) : (
         <p>
