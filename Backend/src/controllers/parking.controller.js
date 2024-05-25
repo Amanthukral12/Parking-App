@@ -94,6 +94,16 @@ const deleteParking = asyncHandler(async (req, res) => {
   }
 });
 
+const getParkingDetail = asyncHandler(async (req, res) => {
+  const parkingId = req.params?.id;
+  let parking = await Parking.findById(parkingId);
+  if (!parking) {
+    throw new ApiError(404, {}, "No Parking found");
+  }
+
+  res.status(200).json(parking);
+});
+
 const updateParking = asyncHandler(async (req, res) => {
   const { longitude, latitude, title, note, basementLevel, pillarNumber } =
     req.body;
@@ -111,17 +121,17 @@ const updateParking = asyncHandler(async (req, res) => {
   parking.basementLevel = basementLevel;
   parking.pillarNumber = pillarNumber;
 
-  for (let i = 0; i < parking.parkingSlip.length; i++) {
-    await deleteFromCloudinary(parking.parkingSlip[i].public_id);
-  }
-
-  let parkingSlipImageList = [];
-
   if (
     req.files &&
     Array.isArray(req.files.parkingSlip) &&
     req.files.parkingSlip.length > 0
   ) {
+    for (let i = 0; i < parking.parkingSlip.length; i++) {
+      await deleteFromCloudinary(parking.parkingSlip[i].public_id);
+    }
+
+    let parkingSlipImageList = [];
+
     for (let i = 0; i < req.files.parkingSlip.length; i++) {
       let parkingSlipImageLocalPath = req.files.parkingSlip[i].path;
 
@@ -134,9 +144,8 @@ const updateParking = asyncHandler(async (req, res) => {
         public_id: result?.public_id,
       });
     }
+    parking.parkingSlip = parkingSlipImageList;
   }
-
-  parking.parkingSlip = parkingSlipImageList;
 
   await parking.save();
 
@@ -147,4 +156,10 @@ const updateParking = asyncHandler(async (req, res) => {
     );
 });
 
-export { addParking, getParkings, deleteParking, updateParking };
+export {
+  addParking,
+  getParkings,
+  deleteParking,
+  updateParking,
+  getParkingDetail,
+};

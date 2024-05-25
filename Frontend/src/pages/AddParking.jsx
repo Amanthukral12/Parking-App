@@ -1,11 +1,10 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { Link } from "react-router-dom";
 import { addParkingReducer } from "../reducers/AddParkingReducer.jsx";
 import { UserParking } from "../context/ParkingProvider.jsx";
 import { toast } from "react-toastify";
 
 const AddParking = () => {
-  const [images, setImages] = useState([]);
   const initialState = {
     longitude: "",
     latitude: "",
@@ -38,7 +37,6 @@ const AddParking = () => {
     if (e.target.files) {
       if (e.target.files.length !== 0) {
         const files = Array.from(e.target.files);
-        setImages((prevImages) => prevImages.concat(files));
         dispatch({
           type: "SET_PARKING_SLIPS",
           parkingSlip: files,
@@ -64,7 +62,6 @@ const AddParking = () => {
     formData.append("note", note);
     formData.append("basementLevel", basementLevel);
     formData.append("pillarNumber", pillarNumber);
-    console.log(state);
     state.parkingSlip.forEach((slip) => formData.append("parkingSlip", slip));
 
     try {

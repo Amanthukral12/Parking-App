@@ -15,6 +15,7 @@ import Login from "./pages/Login.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import ParkingProvider from "./context/ParkingProvider.jsx";
 import AddParking from "./pages/AddParking.jsx";
+import UpdateParking from "./pages/UpdateParking.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/update-account" element={<UserProfile />} />
       <Route path="/add-parking" element={<AddParking />} />
+      <Route path="/:id" element={<UpdateParking />} />
     </Route>
   )
 );

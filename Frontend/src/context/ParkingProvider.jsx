@@ -1,4 +1,10 @@
-import { createContext, useContext, useReducer, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useMemo,
+} from "react";
 import { parkingReducer } from "../reducers/ParkingReducer.jsx";
 import axios from "axios";
 
@@ -22,7 +28,7 @@ const ParkingProvider = ({ children }) => {
     }
   }, []);
 
-  const addParking = async (formData) => {
+  const addParking = useCallback(async (formData) => {
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -42,9 +48,9 @@ const ParkingProvider = ({ children }) => {
       console.log(error);
       throw error;
     }
-  };
+  }, []);
 
-  const deleteParking = async (id) => {
+  const deleteParking = useCallback(async (id) => {
     try {
       await axios.delete(`/api/v1/parkings/${id}`);
       parkingDispatch({
@@ -55,12 +61,65 @@ const ParkingProvider = ({ children }) => {
       console.log(error);
       throw error;
     }
-  };
+  }, []);
+
+  const updateParking = useCallback(async (id, updatedData) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    try {
+      const res = await axios.put(
+        `/api/v1/parkings/${id}`,
+        updatedData,
+        config
+      );
+      parkingDispatch({
+        type: "UPDATE_PARKING",
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }, []);
+
+  const getParkingDetail = useCallback(async (id) => {
+    try {
+      const res = await axios.get(`/api/v1/parkings/${id}`);
+      parkingDispatch({
+        type: "GET_PARKING_DETAIL",
+        payload: res.data,
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      parkings,
+      getAllParkings,
+      getParkingDetail,
+      updateParking,
+      addParking,
+      deleteParking,
+    }),
+    [
+      parkings,
+      getAllParkings,
+      getParkingDetail,
+      updateParking,
+      addParking,
+      deleteParking,
+    ]
+  );
 
   return (
-    <ParkingContext.Provider
-      value={{ parkings, getAllParkings, addParking, deleteParking }}
-    >
+    <ParkingContext.Provider value={contextValue}>
       {children}
     </ParkingContext.Provider>
   );

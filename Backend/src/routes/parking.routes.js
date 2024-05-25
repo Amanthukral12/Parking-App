@@ -4,6 +4,7 @@ import {
   deleteParking,
   getParkings,
   updateParking,
+  getParkingDetail,
 } from "../controllers/parking.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -16,7 +17,8 @@ router
 router.route("/").get(verifyJWT, getParkings);
 router
   .route("/:id")
+  .get(verifyJWT, getParkingDetail)
   .delete(verifyJWT, deleteParking)
-  .post(upload.fields([{ name: "parkingSlip" }]), verifyJWT, updateParking);
+  .put(upload.fields([{ name: "parkingSlip" }]), verifyJWT, updateParking);
 
 export default router;

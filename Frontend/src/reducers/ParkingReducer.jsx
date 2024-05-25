@@ -15,6 +15,17 @@ export const parkingReducer = (state, action) => {
       localStorage.setItem("parkings", JSON.stringify(updatedParkings));
       return updatedParkings;
     }
+    case "UPDATE_PARKING": {
+      const updatedParkings = state.map((parking) =>
+        parking._id === action.payload.data._id ? action.payload.data : parking
+      );
+      localStorage.setItem("parkings", JSON.stringify(updatedParkings));
+      return updatedParkings;
+    }
+    case "GET_PARKING_DETAIL":
+      return state.map((parking) =>
+        parking._id === action.payload._id ? action.payload : parking
+      );
     default:
       state;
   }

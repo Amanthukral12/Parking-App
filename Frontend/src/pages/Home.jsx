@@ -91,6 +91,7 @@ const Home = () => {
               <button onClick={() => deleteParkingHandler(parking._id)}>
                 Delete Parking
               </button>
+              <Link to={`/${parking._id}`}>Update Parking</Link>
             </div>
           ))}
         </div>
