@@ -53,8 +53,6 @@ const UpdateParking = () => {
     fetchParkingDetail();
   }, [getParkingDetail, parkingId]);
 
-  console.log(formData);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({

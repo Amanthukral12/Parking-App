@@ -84,14 +84,18 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 15 * 60 * 1000,
+    })
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 10 * 24 * 60 * 60 * 1000,
+    })
     .json(
       new ApiResponse(
         200,
@@ -104,7 +108,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
-    { $set: { refreshToken: undefined } },
+    { $unset: { refreshToken: 1 } },
     { new: true }
   );
   const options = {
@@ -138,24 +142,24 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError(401, "Refresh token is expired or used");
     }
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-    const { accessToken, newRefreshToken } =
-      await generateAccessAndRefreshTokens(user._id);
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", newRefreshToken, options)
-      .json(
-        new ApiResponse(
-          200,
-          { accessToken, refreshToken: newRefreshToken },
-          "Access token refreshed"
-        )
-      );
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 15 * 60 * 1000,
+      })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 10 * 24 * 60 * 60 * 1000,
+      })
+      .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid refresh token");
   }

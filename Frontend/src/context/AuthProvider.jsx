@@ -1,7 +1,7 @@
 import { useContext, useReducer } from "react";
 import { createContext } from "react";
 import { authReducer } from "../reducers/AuthReducer.jsx";
-import axios from "axios";
+import api from "../utils/api.js";
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(authReducer, {
@@ -16,7 +16,7 @@ const AuthProvider = ({ children }) => {
 
   const loadUser = async () => {
     try {
-      const res = await axios.get("/api/v1/users/current-user");
+      const res = await api.get("/api/v1/users/current-user");
       authDispatch({
         type: "USER_LOADED",
         payload: res.data,
@@ -34,7 +34,7 @@ const AuthProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.post("/api/v1/users/register", formData, config);
+      const res = await api.post("/api/v1/users/register", formData, config);
       authDispatch({
         type: "REGISTER",
         payload: res.data,
@@ -52,7 +52,7 @@ const AuthProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.post("/api/v1/users/login", formData, config);
+      const res = await api.post("/api/v1/users/login", formData, config);
       authDispatch({
         type: "LOGIN",
         payload: res.data,
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await axios.post("/api/v1/users/logout");
+      const res = await api.post("/api/v1/users/logout");
       authDispatch({
         type: "LOGOUT",
       });
@@ -79,7 +79,7 @@ const AuthProvider = ({ children }) => {
 
   const updateProfile = async (formData) => {
     try {
-      const res = await axios.patch("/api/v1/users/update-account", formData);
+      const res = await api.patch("/api/v1/users/update-account", formData);
       authDispatch({ type: "UPDATE_PROFILE", payload: res.data });
       return res;
     } catch (error) {
@@ -90,7 +90,7 @@ const AuthProvider = ({ children }) => {
 
   const updatePassword = async (formData) => {
     try {
-      const res = await axios.post("/api/v1/users/change-password", formData);
+      const res = await api.post("/api/v1/users/change-password", formData);
       authDispatch({ type: "UPDATE_PASSWORD", payload: res.data });
       return res;
     } catch (error) {
@@ -106,7 +106,7 @@ const AuthProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.patch(
+      const res = await api.patch(
         "/api/v1/users/profilePhoto",
         formData,
         config

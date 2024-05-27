@@ -6,7 +6,7 @@ import {
   useMemo,
 } from "react";
 import { parkingReducer } from "../reducers/ParkingReducer.jsx";
-import axios from "axios";
+import api from "../utils/api.js";
 
 const ParkingContext = createContext();
 const ParkingProvider = ({ children }) => {
@@ -17,7 +17,7 @@ const ParkingProvider = ({ children }) => {
 
   const getAllParkings = useCallback(async () => {
     try {
-      const res = await axios.get("/api/v1/parkings/");
+      const res = await api.get("/api/v1/parkings/");
       parkingDispatch({
         type: "GET_PARKINGS",
         payload: res.data,
@@ -35,7 +35,7 @@ const ParkingProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "/api/v1/parkings/add-parking",
         formData,
         config
@@ -52,7 +52,7 @@ const ParkingProvider = ({ children }) => {
 
   const deleteParking = useCallback(async (id) => {
     try {
-      await axios.delete(`/api/v1/parkings/${id}`);
+      await api.delete(`/api/v1/parkings/${id}`);
       parkingDispatch({
         type: "DELETE_PARKING",
         payload: id,
@@ -70,11 +70,7 @@ const ParkingProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.put(
-        `/api/v1/parkings/${id}`,
-        updatedData,
-        config
-      );
+      const res = await api.put(`/api/v1/parkings/${id}`, updatedData, config);
       parkingDispatch({
         type: "UPDATE_PARKING",
         payload: res.data,
@@ -87,7 +83,7 @@ const ParkingProvider = ({ children }) => {
 
   const getParkingDetail = useCallback(async (id) => {
     try {
-      const res = await axios.get(`/api/v1/parkings/${id}`);
+      const res = await api.get(`/api/v1/parkings/${id}`);
       parkingDispatch({
         type: "GET_PARKING_DETAIL",
         payload: res.data,
