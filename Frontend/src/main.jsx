@@ -17,6 +17,7 @@ import ParkingProvider from "./context/ParkingProvider.jsx";
 import AddParking from "./pages/AddParking.jsx";
 import UpdateParking from "./pages/UpdateParking.jsx";
 import ParkingDetails from "./pages/ParkingDetails.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,10 +25,12 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/update-account" element={<UserProfile />} />
-      <Route path="/add-parking" element={<AddParking />} />
-      <Route path="/:id" element={<ParkingDetails />} />
-      <Route path="/update/:id" element={<UpdateParking />} />
+      <Route path="" element={<PrivateRoute />}>
+        <Route path="/update-account" element={<UserProfile />} />
+        <Route path="/add-parking" element={<AddParking />} />
+        <Route path="/:id" element={<ParkingDetails />} />
+        <Route path="/update/:id" element={<UpdateParking />} />
+      </Route>
     </Route>
   )
 );
