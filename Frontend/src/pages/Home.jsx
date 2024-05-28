@@ -87,11 +87,21 @@ const Home = () => {
         <div>
           {parkings.map((parking) => (
             <div key={parking._id}>
-              <p>{parking.title}</p>
-              <button onClick={() => deleteParkingHandler(parking._id)}>
-                Delete Parking
-              </button>
-              <Link to={`/update/${parking._id}`}>Update Parking</Link>
+              <Link to={`/${parking._id}`}>
+                <p>{parking.title}</p>
+                <button onClick={() => deleteParkingHandler(parking._id)}>
+                  Delete Parking
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigate(`/update/${parking._id}`);
+                  }}
+                >
+                  Update Parking
+                </button>
+              </Link>
             </div>
           ))}
         </div>
