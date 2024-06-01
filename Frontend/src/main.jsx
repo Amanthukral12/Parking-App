@@ -22,10 +22,10 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="" element={<PrivateRoute />}>
+        <Route index={true} path="/" element={<Home />} />
         <Route path="/update-account" element={<UserProfile />} />
         <Route path="/add-parking" element={<AddParking />} />
         <Route path="/:id" element={<ParkingDetails />} />

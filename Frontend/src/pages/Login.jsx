@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import image from "../assets/Front car-pana.webp";
 const Login = () => {
   const { login, isAuthenticated } = UserAuth();
 
@@ -51,35 +52,63 @@ const Login = () => {
     }
   };
   return (
-    <>
-      <h1>Login</h1>
+    <div className=" md:bg-black md:opacity-[.87] h-[100vh] md:flex md:justify-center md:items-center">
+      <div className="w-full h-full z-10 md:w-4/5 md:h-4/5 flex flex-col-reverse md:flex-row">
+        <section className="bg-white h-[70%] w-full md:w-1/2 flex flex-col items-center">
+          <h1 className="hidden md:text-3xl md:font-semibold md:mt-10 ">
+            ParkSaver
+          </h1>
+          <p className="text-2xl font-bold mt-10 mb-10">
+            Good to see you again!
+          </p>
 
-      <form onSubmit={onSubmit}>
-        <input
-          type="email"
-          placeholder="email"
-          value={email}
-          onChange={onChange}
-          name="email"
-        />
-        <input
-          type="text"
-          placeholder="userName"
-          value={userName}
-          onChange={onChange}
-          name="userName"
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={onChange}
-          name="password"
-        />
+          <form onSubmit={onSubmit} className="flex flex-col w-4/5">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={onChange}
+              name="email"
+              className="text-lg pl-2 border-b-2 border-gray-600 mb-4 outline-none"
+            />
+            <input
+              type="text"
+              placeholder="UserName"
+              value={userName}
+              onChange={onChange}
+              name="userName"
+              className="text-lg pl-2 border-b-2 border-gray-600 mb-4 outline-none"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={onChange}
+              name="password"
+              className="text-lg pl-2 border-b-2 border-gray-600 mb-4 outline-none"
+            />
 
-        <button type="submit">Login</button>
-      </form>
-    </>
+            <button
+              type="submit"
+              className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 mt-5 mb-5"
+            >
+              Login
+            </button>
+          </form>
+          <p>
+            Don’t have an account? Sign up <Link to={"/register"}>here</Link>.
+          </p>
+        </section>
+        <section className="bg-[#E38A1D] w-full h-[30%] flex flex-col justify-center items-center md:w-1/2">
+          <img
+            src={image}
+            className="h-[150px] w-[200px]"
+            alt="parksaver image"
+          />
+          <h1 className="text-5xl font-bold">ParkSaver</h1>
+        </section>
+      </div>
+    </div>
   );
 };
 
