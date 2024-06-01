@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
+import image from "../assets/Front car-pana.webp";
+import { Link } from "react-router-dom";
+
 const Register = () => {
   const { register } = UserAuth();
   const [user, setUser] = useState({
@@ -48,42 +51,75 @@ const Register = () => {
   };
 
   return (
-    <>
-      <h1>Register</h1>
-
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="fullname"
-          value={fullName}
-          onChange={onChange}
-          name="fullName"
-        />
-        <input
-          type="email"
-          placeholder="email"
-          value={email}
-          onChange={onChange}
-          name="email"
-        />
-        <input
-          type="text"
-          placeholder="userName"
-          value={userName}
-          onChange={onChange}
-          name="userName"
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={onChange}
-          name="password"
-        />
-        <input type="file" name="profilePhoto" onChange={onFileChange} />
-        <button type="submit">Register</button>
-      </form>
-    </>
+    <div className=" lg:bg-black lg:opacity-[.87] h-[100vh] lg:flex lg:justify-center lg:items-center">
+      <div className="w-full h-full z-10 lg:w-4/5 lg:h-4/5 flex flex-col-reverse lg:flex-row">
+        <section className="bg-white h-[70%] w-full lg:w-1/2 lg:h-full flex flex-col items-center lg:rounded-l-3xl">
+          <h1 className="hidden lg:block lg:text-4xl lg:font-semibold lg:mt-16">
+            ParkSaver
+          </h1>
+          <p className="text-2xl lg:text-4xl font-bold mt-10 mb-10">
+            Good to see you!
+          </p>
+          <form onSubmit={onSubmit} className="flex flex-col w-4/5">
+            <input
+              type="text"
+              placeholder="fullname"
+              value={fullName}
+              onChange={onChange}
+              name="fullName"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+            />
+            <input
+              type="email"
+              placeholder="email"
+              value={email}
+              onChange={onChange}
+              name="email"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+            />
+            <input
+              type="text"
+              placeholder="userName"
+              value={userName}
+              onChange={onChange}
+              name="userName"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+            />
+            <input
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={onChange}
+              name="password"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+            />
+            <input
+              type="file"
+              name="profilePhoto"
+              id="profilePhoto"
+              onChange={onFileChange}
+            />
+            <button
+              type="submit"
+              className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 mt-5 mb-5"
+            >
+              Register
+            </button>
+          </form>
+          <p>
+            Already have an account? <Link to={"/login"}>Sign in here</Link>.
+          </p>
+        </section>
+        <section className="bg-[#E38A1D] w-full h-[30%] lg:h-full flex flex-col justify-center items-center lg:w-1/2 lg:rounded-r-3xl">
+          <img
+            src={image}
+            className="h-[150px] w-[200px] lg:h-[250px] lg:w-[300px]"
+            alt="parksaver image"
+          />
+          <h1 className="text-5xl font-bold">ParkSaver</h1>
+        </section>
+      </div>
+    </div>
   );
 };
 
