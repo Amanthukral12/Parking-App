@@ -1,9 +1,8 @@
 import { useReducer } from "react";
-import { Link } from "react-router-dom";
 import { addParkingReducer } from "../reducers/AddParkingReducer.jsx";
 import { UserParking } from "../context/ParkingProvider.jsx";
 import { toast } from "react-toastify";
-
+import Navbar from "../components/Navbar.jsx";
 const AddParking = () => {
   const initialState = {
     longitude: "",
@@ -88,65 +87,83 @@ const AddParking = () => {
   };
 
   return (
-    <>
-      <h1>Add New Parking</h1>
-      <p>
-        <Link to={"/"}>Home</Link>
-      </p>
-      <button onClick={getCurrentLocation}>Get Current Location</button>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="latitude"
-          placeholder="latitude"
-          value={latitude}
-          readOnly
-        />
-        <input
-          type="text"
-          name="longitude"
-          placeholder="longitude"
-          value={longitude}
-          readOnly
-        />
-        <input
-          type="text"
-          name="title"
-          placeholder="add parking title(Optional)"
-          value={title}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="note"
-          placeholder="add parking note(Optional)"
-          value={note}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="pillarNumber"
-          placeholder="add pillar number(Optional)"
-          value={pillarNumber}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="basementLevel"
-          placeholder="add basement level(Optional)"
-          value={basementLevel}
-          onChange={handleChange}
-        />
-        <input
-          accept="image/*"
-          type="file"
-          capture="environment"
-          onChange={handleCapture}
-          multiple
-        />
-        <button type="submit">Add Parking</button>
-      </form>
-    </>
+    <div className="bg-black min-h-[100vh]">
+      <div className="w-full flex justify-center sticky top-0 z-10 mb-4">
+        <Navbar />
+      </div>
+      <section className="flex flex-col items-center">
+        <h1 className="text-[#D9D9D9] text-2xl my-4">Add New Parking</h1>
+        <button
+          className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 px-4 my-4"
+          onClick={getCurrentLocation}
+        >
+          Get Current Location
+        </button>
+        <form onSubmit={handleSubmit} className="flex flex-col w-4/5 mt-5">
+          <input
+            type="text"
+            name="latitude"
+            placeholder="Latitude"
+            value={latitude}
+            readOnly
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            type="text"
+            name="longitude"
+            placeholder="Longitude"
+            value={longitude}
+            readOnly
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            type="text"
+            name="title"
+            placeholder="Add Parking Title"
+            value={title}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            type="text"
+            name="note"
+            placeholder="Add Parking Pote(Optional)"
+            value={note}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            type="text"
+            name="pillarNumber"
+            placeholder="Add Pillar Number(Optional)"
+            value={pillarNumber}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            type="text"
+            name="basementLevel"
+            placeholder="Add Basement Level(Optional)"
+            value={basementLevel}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            accept="image/*"
+            type="file"
+            capture="environment"
+            onChange={handleCapture}
+            multiple
+          />
+          <button
+            type="submit"
+            className="bg-[#E38A1D] rounded-lg text-lg text-[#D9D9D9] py-1 mt-5 mb-5"
+          >
+            Add Parking
+          </button>
+        </form>
+      </section>
+    </div>
   );
 };
 
