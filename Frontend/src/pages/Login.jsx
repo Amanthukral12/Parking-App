@@ -52,7 +52,7 @@ const Login = () => {
     }
   };
   return (
-    <div className=" lg:bg-black lg:opacity-[.87] h-[100vh] lg:flex lg:justify-center lg:items-center">
+    <div className=" lg:bg-black  h-[100vh] lg:flex lg:justify-center lg:items-center">
       <div className="w-full h-full z-10 lg:w-4/5 lg:h-4/5 flex flex-col-reverse lg:flex-row">
         <section className="bg-white h-[70%] w-full lg:w-1/2 lg:h-full flex flex-col items-center lg:rounded-l-3xl">
           <h1 className="hidden lg:block lg:text-4xl lg:font-semibold lg:mt-16 ">
