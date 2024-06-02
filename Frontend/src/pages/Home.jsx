@@ -83,14 +83,12 @@ const Home = () => {
       {isAuthenticated ? (
         <div className="flex flex-col w-4/5 mx-auto items-center md:flex-row md:flex-wrap md:justify-center">
           {parkings.map((parking) => (
-            <div
-              key={parking._id}
+            <Link
+              to={`/${parking._id}`}
               className="text-[#D9D9D9] bg-[#1E1E1E] w-4/5 md:w-[40%] md:h-[14rem] lg:w-[30%] md:mx-2 h-[8rem] relative rounded-md mt-6"
+              key={parking._id}
             >
-              <Link
-                to={`/${parking._id}`}
-                className="flex flex-col justify-between"
-              >
+              <div className="flex flex-col justify-between">
                 <p className="absolute top-4 left-1/2 -translate-x-1/2 text-xl">
                   {parking.title}
                 </p>
@@ -114,8 +112,8 @@ const Home = () => {
                     <FaTrash className="text-2xl" />
                   </button>
                 </div>
-              </Link>
-            </div>
+              </div>
+            </Link>
           ))}
         </div>
       ) : null}

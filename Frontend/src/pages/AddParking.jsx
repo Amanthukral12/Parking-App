@@ -3,6 +3,8 @@ import { addParkingReducer } from "../reducers/AddParkingReducer.jsx";
 import { UserParking } from "../context/ParkingProvider.jsx";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar.jsx";
+import { useNavigate } from "react-router-dom";
+
 const AddParking = () => {
   const initialState = {
     longitude: "",
@@ -15,6 +17,7 @@ const AddParking = () => {
   };
   const [state, dispatch] = useReducer(addParkingReducer, initialState);
   const { addParking } = UserParking();
+  const navigate = useNavigate();
 
   const { latitude, longitude, title, note, basementLevel, pillarNumber } =
     state;
@@ -66,6 +69,7 @@ const AddParking = () => {
     try {
       await addParking(formData);
       toast.success("Parking successfully added");
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.data) {
         const parser = new DOMParser();
@@ -99,54 +103,63 @@ const AddParking = () => {
         >
           Get Current Location
         </button>
-        <form onSubmit={handleSubmit} className="flex flex-col w-4/5 mt-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-4/5 md:w-1/2 mt-5"
+        >
+          <label className="text-[#D9D9D9]">Latitude</label>
           <input
             type="text"
             name="latitude"
             placeholder="Latitude"
             value={latitude}
             readOnly
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Longitude</label>
           <input
             type="text"
             name="longitude"
             placeholder="Longitude"
             value={longitude}
             readOnly
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Parking Title</label>
           <input
             type="text"
             name="title"
             placeholder="Add Parking Title"
             value={title}
             onChange={handleChange}
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Parking Note</label>
           <input
             type="text"
             name="note"
             placeholder="Add Parking Pote(Optional)"
             value={note}
             onChange={handleChange}
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Pillar Number</label>
           <input
             type="text"
             name="pillarNumber"
             placeholder="Add Pillar Number(Optional)"
             value={pillarNumber}
             onChange={handleChange}
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Basement Level</label>
           <input
             type="text"
             name="basementLevel"
             placeholder="Add Basement Level(Optional)"
             value={basementLevel}
             onChange={handleChange}
-            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1 bg-black text-[#D9D9D9]"
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
           <input
             accept="image/*"

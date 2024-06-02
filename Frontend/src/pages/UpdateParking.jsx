@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { UserParking } from "../context/ParkingProvider.jsx";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar.jsx";
 
 const UpdateParking = () => {
   const { id: parkingId } = useParams();
@@ -128,63 +129,93 @@ const UpdateParking = () => {
   };
 
   return (
-    <>
-      <h1>UpdateParking</h1>
-      <button onClick={handleLocationUpdate}>Update Current Location</button>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="latitude"
-          placeholder="latitude"
-          value={formData.latitude}
-          readOnly
-        />
-        <input
-          type="text"
-          name="longitude"
-          placeholder="longitude"
-          value={formData.longitude}
-          readOnly
-        />
-        <input
-          type="text"
-          name="title"
-          placeholder="add parking title(Optional)"
-          value={formData.title}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="note"
-          placeholder="add parking note(Optional)"
-          value={formData.note}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="pillarNumber"
-          placeholder="add pillar number(Optional)"
-          value={formData.pillarNumber}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="basementLevel"
-          placeholder="add basement level(Optional)"
-          value={formData.basementLevel}
-          onChange={handleChange}
-        />
-        <input
-          accept="image/*"
-          type="file"
-          capture="environment"
-          onChange={handleFileChange}
-          multiple
-          name="parkingSlip"
-        />
-        <button type="submit">Update Parking</button>
-      </form>
-    </>
+    <div className="bg-black min-h-[100vh]">
+      <div className="w-full flex justify-center sticky top-0 z-10 mb-4">
+        <Navbar />
+      </div>
+      <section className="flex flex-col items-center">
+        <h1 className="text-[#D9D9D9] text-2xl my-4">Update Parking</h1>
+        <button
+          className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 px-4 my-4"
+          onClick={handleLocationUpdate}
+        >
+          Update Current Location
+        </button>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-4/5 md:w-1/2 mt-5"
+        >
+          <label className="text-[#D9D9D9]">Latitude</label>
+          <input
+            type="text"
+            name="latitude"
+            placeholder="latitude"
+            value={formData.latitude}
+            readOnly
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <label className="text-[#D9D9D9]">Longitude</label>
+          <input
+            type="text"
+            name="longitude"
+            placeholder="longitude"
+            value={formData.longitude}
+            readOnly
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <label className="text-[#D9D9D9]">Parking Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="Add Parking Title(Optional)"
+            value={formData.title}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <label className="text-[#D9D9D9]">Parking Note</label>
+          <input
+            type="text"
+            name="note"
+            placeholder="Add Parking Note(Optional)"
+            value={formData.note}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <label className="text-[#D9D9D9]">Pilar Number</label>
+          <input
+            type="text"
+            name="pillarNumber"
+            placeholder="Add Pillar Number(Optional)"
+            value={formData.pillarNumber}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <label className="text-[#D9D9D9]">Basement Level</label>
+          <input
+            type="text"
+            name="basementLevel"
+            placeholder="Add Basement Level(Optional)"
+            value={formData.basementLevel}
+            onChange={handleChange}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
+          />
+          <input
+            accept="image/*"
+            type="file"
+            capture="environment"
+            onChange={handleFileChange}
+            multiple
+            name="parkingSlip"
+          />
+          <button
+            type="submit"
+            className="bg-[#E38A1D] rounded-lg text-lg text-[#D9D9D9] py-1 mt-5 mb-5"
+          >
+            Update Parking
+          </button>
+        </form>
+      </section>
+    </div>
   );
 };
 
