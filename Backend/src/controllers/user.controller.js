@@ -89,11 +89,13 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: "none",
       maxAge: 15 * 60 * 1000,
     })
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: "none",
       maxAge: 10 * 24 * 60 * 60 * 1000,
     })
     .json(
@@ -152,11 +154,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: true,
+        sameSite: "none",
         maxAge: 15 * 60 * 1000,
       })
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
+        sameSite: "none",
         maxAge: 10 * 24 * 60 * 60 * 1000,
       })
       .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
