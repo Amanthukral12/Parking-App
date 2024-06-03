@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { UserParking } from "../context/ParkingProvider.jsx";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar.jsx";
 
 const UpdateParking = () => {
   const { id: parkingId } = useParams();
   const { getParkingDetail, updateParking } = UserParking();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     longitude: "",
     latitude: "",
@@ -108,6 +109,7 @@ const UpdateParking = () => {
     try {
       await updateParking(parkingId, data);
       toast.success("Parking successfully updated");
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.data) {
         const parser = new DOMParser();

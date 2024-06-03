@@ -161,6 +161,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       })
       .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
   } catch (error) {
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    clearCookie("accessToken", options);
+    clearCookie("refreshToken", options);
     throw new ApiError(401, error?.message || "Invalid refresh token");
   }
 });

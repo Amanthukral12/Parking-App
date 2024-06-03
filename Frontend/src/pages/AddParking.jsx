@@ -32,6 +32,10 @@ const AddParking = () => {
           longitude: position.coords.longitude,
         });
       });
+    } else {
+      toast.error(
+        "Not able to find current location. Please track using Pillar Number"
+      );
     }
   };
 
@@ -132,6 +136,7 @@ const AddParking = () => {
             placeholder="Add Parking Title"
             value={title}
             onChange={handleChange}
+            required
             className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
           <label className="text-[#D9D9D9]">Parking Note</label>
