@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { FaCamera } from "react-icons/fa";
+import Navbar from "../components/Navbar.jsx";
+import "./styles.css";
 const UserProfile = () => {
   const { user, updateProfile, updatePassword, updateProfileImage } =
     UserAuth();
@@ -69,36 +71,65 @@ const UserProfile = () => {
     }
   };
   return (
-    <div>
-      <p>
-        <Link to={"/"}>Home</Link>
-      </p>
-      <section>
-        <img src={user.profilePhoto.profilePhotoUrl} alt="user profile photo" />
-        <input type="file" name="profilePhoto" onChange={onFileChange} />
-        <p>{user.userName}</p>
-        <p>{user.fullName}</p>
-        <p>{user.email}</p>
+    <div className="bg-black min-h-[100vh]">
+      <div className="w-full flex justify-center sticky top-0 z-10 mb-4">
+        <Navbar />
+      </div>
+      <section className="flex flex-col items-center">
+        <div className="profilepic">
+          <img
+            src={user.profilePhoto.profilePhotoUrl}
+            alt="user profile photo"
+            className="h-[300px] w-[300px] rounded-[50%] border-gray-600 border-2 profilepic__image"
+          />
+          <label id="profilePhoto" className="profilepic__content">
+            <input
+              id="profilePhoto"
+              type="file"
+              name="profilePhoto"
+              onChange={onFileChange}
+              hidden
+            />
+            <span className="profilepic__icon">
+              <FaCamera className="text-2xl text-[#D9D9D9] absolute icon" />
+            </span>
+          </label>
+        </div>
+
+        <p className="text-[#D9D9D9]">{user.userName}</p>
+        <p className="text-[#D9D9D9]">{user.fullName}</p>
+        <p className="text-[#D9D9D9]">{user.email}</p>
       </section>
-      <section>
-        <form onSubmit={onSubmit}>
+      <section className="flex flex-col items-center">
+        <form onSubmit={onSubmit} className="flex flex-col w-4/5 md:w-1/2 mt-5">
+          <label className="text-[#D9D9D9]">FullName</label>
           <input
             type="text"
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">Old Password</label>
           <input
             type="password"
             placeholder="Enter old Password"
             onChange={(e) => setOldPassword(e.target.value)}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
+          <label className="text-[#D9D9D9]">New Password</label>
           <input
             type="password"
             placeholder="Enter new Password"
             onChange={(e) => setNewPasswword(e.target.value)}
+            className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4  outline-none pb-1 bg-black text-[#D9D9D9]"
           />
-          <button type="submit">Update Profile</button>
+          <button
+            type="submit"
+            className="bg-[#E38A1D] rounded-lg text-lg text-[#D9D9D9] py-1 mt-5 mb-5"
+          >
+            Update Profile
+          </button>
         </form>
       </section>
     </div>
