@@ -40,8 +40,8 @@ const ParkingDetails = () => {
       <section className="flex flex-col items-center">
         <h1 className="text-[#D9D9D9] text-2xl my-4">Parking Details</h1>
         <div className="border-2 border-gray-400 py-4 px-6 mb-4 rounded-md w-4/5">
-          <p className="text-[#D9D9D9] text-md my-1">
-            Title: {parkingDetail.title}
+          <p className="text-[#D9D9D9] text-md my-1 text-2xl">
+            {parkingDetail.title}
           </p>
           <p className="text-[#D9D9D9] text-md my-1">
             Note:{" "}
@@ -67,6 +67,7 @@ const ParkingDetails = () => {
           width="400"
           height="270"
           src={`https://maps.google.com/maps?q=${parkingDetail.latitude},${parkingDetail.longitude}&hl=en&z=14&amp&output=embed`}
+          className="rounded-md"
         ></iframe>
 
         <a
@@ -76,6 +77,15 @@ const ParkingDetails = () => {
         >
           Get Parking Location
         </a>
+
+        {parkingDetail?.parkingSlip?.map((slip) => (
+          <img
+            key={slip._id}
+            src={slip.parkingSlipUrl}
+            className="w-4/5 md:w-1/4 mb-2"
+            alt=""
+          />
+        ))}
 
         <button
           onClick={() => getDownloadableImageLinks()}
