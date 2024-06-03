@@ -6,7 +6,13 @@ function App() {
   return (
     <>
       <Outlet />
-      <ToastContainer />
+      <ToastContainer
+        theme="dark"
+        autoClose={2500}
+        newestOnTop
+        closeOnClick
+        transition:Bouncek
+      />
     </>
   );
 }
