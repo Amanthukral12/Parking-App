@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserParking } from "../context/ParkingProvider.jsx";
 import Navbar from "../components/Navbar.jsx";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+const settings = {
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  lazyLoad: true,
+};
+
 const ParkingDetails = () => {
   const { id: parkingID } = useParams();
   const { getParkingDetail } = UserParking();
@@ -78,14 +87,20 @@ const ParkingDetails = () => {
           Get Parking Location
         </a>
 
-        {parkingDetail?.parkingSlip?.map((slip) => (
-          <img
-            key={slip._id}
-            src={slip.parkingSlipUrl}
-            className="w-4/5 md:w-1/4 mb-2"
-            alt=""
-          />
-        ))}
+        {parkingDetail?.parkingSlip?.length > 0 ? (
+          <div className="slider-container w-[90%] text-white mb-4">
+            <Slider {...settings}>
+              {parkingDetail?.parkingSlip?.map((slip) => (
+                <img
+                  key={slip._id}
+                  src={slip.parkingSlipUrl}
+                  className="w-4/5 md:w-1/4 h-[15rem]"
+                  alt="parking slips"
+                />
+              ))}
+            </Slider>
+          </div>
+        ) : null}
 
         <button
           onClick={() => getDownloadableImageLinks()}

@@ -11,7 +11,7 @@ function App() {
         autoClose={2500}
         newestOnTop
         closeOnClick
-        transition:Bouncek
+        transition:Bounce
       />
     </>
   );
