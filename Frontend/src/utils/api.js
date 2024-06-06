@@ -48,7 +48,7 @@ export default api;
 async function refreshToken() {
   try {
     const res = await axios.post(
-      "/api/v1/users/refresh-token",
+      "https://parking-app-y150.onrender.com/api/v1/users/refresh-token",
       {},
       { withCredentials: true }
     );

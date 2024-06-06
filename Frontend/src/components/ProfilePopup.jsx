@@ -43,7 +43,10 @@ const ProfilePopup = ({ shown, close }) => {
         }}
       >
         <img
-          src={user.profilePhoto.profilePhotoUrl}
+          src={
+            user?.profilePhoto?.profilePhotoUrl ||
+            "https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e"
+          }
           alt="user profile photo"
           className="h-[100px] w-[100px] rounded-[50%] border-gray-600 border-2"
         />

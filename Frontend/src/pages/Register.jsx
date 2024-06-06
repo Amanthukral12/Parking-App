@@ -11,7 +11,8 @@ const Register = () => {
     email: "",
     userName: "",
     password: "",
-    profilePhoto: null,
+    profilePhoto:
+      "https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e",
   });
   const { fullName, email, userName, password, profilePhoto } = user;
   const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
@@ -68,6 +69,7 @@ const Register = () => {
               onChange={onChange}
               name="fullName"
               className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              required
             />
             <input
               type="email"
@@ -76,6 +78,7 @@ const Register = () => {
               onChange={onChange}
               name="email"
               className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              required
             />
             <input
               type="text"
@@ -84,6 +87,7 @@ const Register = () => {
               onChange={onChange}
               name="userName"
               className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              required
             />
             <input
               type="password"
@@ -92,6 +96,7 @@ const Register = () => {
               onChange={onChange}
               name="password"
               className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              required
             />
             <input
               type="file"
