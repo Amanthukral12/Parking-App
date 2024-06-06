@@ -87,20 +87,30 @@ const ParkingDetails = () => {
           Get Parking Location
         </a>
 
-        {parkingDetail?.parkingSlip?.length > 0 ? (
+        {parkingDetail?.parkingSlip?.length > 1 ? (
           <div className="slider-container w-[90%] text-white mb-4">
             <Slider {...settings}>
               {parkingDetail?.parkingSlip?.map((slip) => (
                 <img
                   key={slip._id}
                   src={slip.parkingSlipUrl}
-                  className="w-4/5 md:w-1/4 h-[15rem]"
+                  className="w-4/5 md:w-1/4 h-[15rem] rounded-md"
                   alt="parking slips"
                 />
               ))}
             </Slider>
           </div>
         ) : null}
+
+        {parkingDetail?.parkingSlip?.length === 1 &&
+          parkingDetail?.parkingSlip?.map((slip) => (
+            <img
+              key={slip._id}
+              src={slip.parkingSlipUrl}
+              className="w-[90%] md:w-1/4 h-[15rem] rounded-md"
+              alt="parking slips"
+            />
+          ))}
 
         <button
           onClick={() => getDownloadableImageLinks()}

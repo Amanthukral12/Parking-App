@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
     userName,
   });
 
-  await user.setProfilePhoto(profilePhoto?.url, profilePhoto?.public_id);
+  await user.setProfilePhoto(profilePhoto?.secure_url, profilePhoto?.public_id);
 
   await user.save();
 
@@ -225,11 +225,11 @@ const updateUserProfilePhoto = asyncHandler(async (req, res) => {
   );
 
   let userProfilePhoto = {
-    profilePhotoUrl: profilePhoto?.url,
+    profilePhotoUrl: profilePhoto?.secure_url,
     public_id: profilePhoto?.public_id,
   };
 
-  if (!profilePhoto.url) {
+  if (!profilePhoto.secure_url) {
     throw new ApiError(400, "Error while uploading profile photo");
   }
   const user = await User.findByIdAndUpdate(

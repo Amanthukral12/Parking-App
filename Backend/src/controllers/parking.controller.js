@@ -27,7 +27,7 @@ const addParking = asyncHandler(async (req, res) => {
         "Parking-app/ParkingPhotos"
       );
       parkingSlipImageList.push({
-        parkingSlipUrl: result?.url,
+        parkingSlipUrl: result?.secure_url,
         public_id: result?.public_id,
       });
     }
@@ -54,7 +54,7 @@ const getParkings = asyncHandler(async (req, res) => {
 
   const parkings = await Parking.find({
     owner: userId,
-  });
+  }).sort({ createdAt: -1 });
 
   return res
     .status(200)
@@ -140,7 +140,7 @@ const updateParking = asyncHandler(async (req, res) => {
         "Parking-app/ParkingPhotos"
       );
       parkingSlipImageList.push({
-        parkingSlipUrl: result?.url,
+        parkingSlipUrl: result?.secure_url,
         public_id: result?.public_id,
       });
     }
