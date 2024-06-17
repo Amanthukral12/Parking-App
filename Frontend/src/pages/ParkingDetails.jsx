@@ -88,13 +88,13 @@ const ParkingDetails = () => {
         </a>
 
         {parkingDetail?.parkingSlip?.length > 1 ? (
-          <div className="slider-container w-[90%] text-white mb-4">
+          <div className="slider-container w-[90%] md:w-1/4 md:h-[20rem] text-white mb-4">
             <Slider {...settings}>
               {parkingDetail?.parkingSlip?.map((slip) => (
                 <img
                   key={slip._id}
                   src={slip.parkingSlipUrl}
-                  className="w-4/5 md:w-1/4 h-[15rem] rounded-md"
+                  className="w-4/5 md:w-1/4 h-[15rem] md:h-[20rem] rounded-md"
                   alt="parking slips"
                 />
               ))}
@@ -107,7 +107,7 @@ const ParkingDetails = () => {
             <img
               key={slip._id}
               src={slip.parkingSlipUrl}
-              className="w-[90%] md:w-1/4 h-[15rem] rounded-md"
+              className="w-[90%] md:w-1/4 h-[15rem] md:h-[20rem] rounded-md"
               alt="parking slips"
             />
           ))}
