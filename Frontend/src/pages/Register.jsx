@@ -55,47 +55,47 @@ const Register = () => {
     <div className=" lg:bg-black lg:opacity-[.87] h-[100vh] lg:flex lg:justify-center lg:items-center">
       <div className="w-full h-full z-10 lg:w-4/5 lg:h-4/5 flex flex-col-reverse lg:flex-row">
         <section className="bg-white h-[70%] w-full lg:w-1/2 lg:h-full flex flex-col items-center lg:rounded-l-3xl">
-          <h1 className="hidden lg:block lg:text-4xl lg:font-semibold lg:mt-16">
+          <h1 className="hidden lg:block lg:text-4xl lg:font-semibold lg:mt-12">
             ParkSaver
           </h1>
-          <p className="text-2xl lg:text-4xl font-bold mt-10 mb-10">
+          <p className="text-2xl lg:text-3xl font-bold my-5">
             Good to see you!
           </p>
           <form onSubmit={onSubmit} className="flex flex-col w-4/5">
             <input
               type="text"
-              placeholder="fullname"
+              placeholder="Fullname"
               value={fullName}
               onChange={onChange}
               name="fullName"
-              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 outline-none pb-1"
               required
             />
             <input
               type="email"
-              placeholder="email"
+              placeholder="Email"
               value={email}
               onChange={onChange}
               name="email"
-              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 outline-none pb-1"
               required
             />
             <input
               type="text"
-              placeholder="userName"
+              placeholder="UserName"
               value={userName}
               onChange={onChange}
               name="userName"
-              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 outline-none pb-1"
               required
             />
             <input
               type="password"
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={onChange}
               name="password"
-              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 lg:mb-8 outline-none pb-1"
+              className="text-lg lg:text-xl pl-2 border-b-2 border-gray-600 mb-4 outline-none pb-1"
               required
             />
             <input
@@ -106,7 +106,7 @@ const Register = () => {
             />
             <button
               type="submit"
-              className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 mt-5 mb-5"
+              className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 my-4"
             >
               Register
             </button>

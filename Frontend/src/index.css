@@ -4,7 +4,7 @@
 
 
 input::-webkit-file-upload-button {
-    padding: 10px 20px;
+    padding: 5px 20px;
     margin: 20px;
     background-color: #E38A1D;
     border: none;
