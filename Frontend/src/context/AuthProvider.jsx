@@ -2,6 +2,7 @@ import { useContext, useReducer } from "react";
 import { createContext } from "react";
 import { authReducer } from "../reducers/AuthReducer.jsx";
 import api from "../utils/api.js";
+import axios from "axios";
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(authReducer, {
@@ -34,7 +35,7 @@ const AuthProvider = ({ children }) => {
       },
     };
     try {
-      const res = await api.post("/api/v1/users/register", formData, config);
+      const res = await axios.post("/api/v1/users/register", formData, config);
       authDispatch({
         type: "REGISTER",
         payload: res.data,
