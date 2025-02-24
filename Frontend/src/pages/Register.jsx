@@ -2,7 +2,7 @@ import { useState } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 import image from "../assets/Front car-pana.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiMail } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
 import { CiLock } from "react-icons/ci";
@@ -11,6 +11,7 @@ import { IoEyeOffOutline } from "react-icons/io5";
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { register } = UserAuth();
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     fullName: "",
     email: "",
@@ -36,6 +37,7 @@ const Register = () => {
     try {
       await register(userWithPhoto);
       toast.success("User successfully created");
+      navigate("/login");
     } catch (error) {
       if (error.response && error.response.data) {
         const parser = new DOMParser();

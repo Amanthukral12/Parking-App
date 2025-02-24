@@ -35,7 +35,11 @@ const AuthProvider = ({ children }) => {
       },
     };
     try {
-      const res = await axios.post("/api/v1/users/register", formData, config);
+      const res = await axios.post(
+        "https://parking-app-y150.onrender.com/api/v1/users/register",
+        formData,
+        config
+      );
       authDispatch({
         type: "REGISTER",
         payload: res.data,
