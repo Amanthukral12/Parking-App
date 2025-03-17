@@ -1,6 +1,10 @@
 # Park Saver
 
-Parking Application for n for storing user parking locations using current location tracking and saving parking slips made with React.JS, NodeJS, ExpressJS, MongoDB.
+Parking Application for storing user parking locations using current location tracking and saving parking slips made with React.JS, NodeJS, ExpressJS, MongoDB.
+
+## Demo
+
+LIVE DEMO: https://park-saver.netlify.app/
 
 ## Features
 
@@ -22,10 +26,6 @@ Parking Application for n for storing user parking locations using current locat
 - TailwindCSS
 - PWA
 
-
-## Demo
-
-LIVE DEMO: https://park-saver.netlify.app/
 
 ## Backend Env Variables
 
