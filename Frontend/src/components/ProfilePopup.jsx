@@ -37,7 +37,7 @@ const ProfilePopup = ({ shown, close }) => {
       }}
     >
       <div
-        className="bg-[#D9D9D9] absolute top-4 right-4 w-[15rem] h-[15rem] p-2 rounded-lg flex flex-col items-center backdrop:blur-sm"
+        className="bg-gradient-to-br from-gray-950 to-gray-900 text-white absolute top-4 right-4 w-[15rem] h-[15rem] p-2 rounded-lg flex flex-col items-center "
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -57,7 +57,7 @@ const ProfilePopup = ({ shown, close }) => {
         </Link>
         <button
           onClick={(e) => logoutHandler(e)}
-          className="bg-[#E38A1D] rounded-lg text-lg text-[#D9D9D9] py-1 px-14 mt-2 mb-4 font-semibold"
+          className="w-full mt-1 px-6 py-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl text-white font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 hover:scale-[1.02] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Logout
         </button>

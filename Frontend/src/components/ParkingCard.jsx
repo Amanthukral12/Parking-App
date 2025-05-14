@@ -45,34 +45,32 @@ const ParkingCard = ({
               </div>
             )}
           </div>
+          <div className="ml-auto space-x-2 space-y-2">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate(`/update/${id}`);
+              }}
+              className="p-2  text-white rounded-full hover:bg-blue-700 transition-colors"
+              aria-label="Edit parking"
+            >
+              <MdEdit className="w-6 h-6" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(id);
+              }}
+              className="p-2  text-white rounded-full hover:bg-red-700 transition-colors"
+              aria-label="Delete parking"
+            >
+              <Trash2 className="w-6 h-6" />
+            </button>
+          </div>
         </div>
       </Link>
-
-      {/* Action buttons */}
-      <div className="absolute -right-20 top-4 flex space-x-2 transition-all duration-300 group-hover:right-4">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            navigate(`/update/${id}`);
-          }}
-          className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-          aria-label="Edit parking"
-        >
-          <MdEdit className="w-4 h-4" />
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onDelete(id);
-          }}
-          className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
-          aria-label="Delete parking"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-      </div>
     </div>
   );
 };
