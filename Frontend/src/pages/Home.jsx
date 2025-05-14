@@ -1,23 +1,28 @@
-import { Link, useNavigate } from "react-router-dom";
-import { UserAuth } from "../context/AuthProvider.jsx";
-import { toast } from "react-toastify";
-import { UserParking } from "../context/ParkingProvider.jsx";
 import { useEffect, useState } from "react";
+import { UserAuth } from "../context/AuthProvider.jsx";
+import { UserParking } from "../context/ParkingProvider.jsx";
+import { toast } from "react-toastify";
 import Navbar from "../components/Navbar.jsx";
-import { FaPlus } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa6";
-import { MdEdit } from "react-icons/md";
-import MapComponent from "../components/MapComponent.jsx";
+import ParkingCard from "../components/ParkingCard";
+import FloatingActionButton from "../components/FloatingActionButton";
+import MapSection from "../components/MapSection";
+import EmptyState from "../components/EmptyState";
+import PageTransition from "../components/PageTransition";
+
 const Home = () => {
   const { isAuthenticated } = UserAuth();
   const { parkings, getAllParkings, deleteParking } = UserParking();
   const [markers, setMarkers] = useState([]);
-
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isAuthenticated) {
-      getAllParkings();
+      const fetchData = async () => {
+        setIsLoading(true);
+        await getAllParkings();
+        setIsLoading(false);
+      };
+      fetchData();
     }
   }, [getAllParkings, isAuthenticated]);
 
@@ -35,7 +40,15 @@ const Home = () => {
   const deleteParkingHandler = async (id) => {
     try {
       await deleteParking(id);
-      toast.success("Parking successfully deleted");
+      toast.success("Parking successfully deleted", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       if (error.response && error.response.data) {
         const parser = new DOMParser();
@@ -43,72 +56,85 @@ const Home = () => {
           error.response.data,
           "text/html"
         );
-        let errorMessage = htmlDoc.body.textContent.trim();
+        let errorMessage =
+          htmlDoc.body.textContent?.trim() || "An error occurred";
         const index = errorMessage.indexOf("at");
         if (index !== -1) {
           errorMessage = errorMessage.substring(0, index);
           errorMessage = errorMessage.replace("Error: ", "");
         }
-        toast.error(errorMessage);
+        toast.error(errorMessage, {
+          theme: "dark",
+        });
       } else {
-        toast.error(error.message);
+        toast.error(error.message, {
+          theme: "dark",
+        });
       }
     }
   };
+
   return (
-    <div className="bg-black min-h-[100vh]">
-      <div className="w-full flex justify-center sticky top-0 z-10 mb-4">
+    <PageTransition className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-900 text-white">
+      <div className="w-full sticky top-0 z-10">
         <Navbar />
       </div>
-      {isAuthenticated ? (
-        <button className="h-[72px] w-[72px] rounded-[50%] bg-[#E38A1D] flex justify-center items-center z-20 fixed bottom-8 left-1/2 -translate-x-1/2">
-          <Link to={"/add-parking"}>
-            <FaPlus className="h-[44px] w-[44px]" />
-          </Link>
-        </button>
-      ) : null}
+
+      {isAuthenticated && <FloatingActionButton to="/add-parking" />}
 
       {isAuthenticated ? (
-        <>
-          <MapComponent markers={markers} />
-          <div className="flex flex-col w-4/5 mx-auto items-center md:flex-row md:flex-wrap md:justify-center">
-            {parkings.map((parking) => (
-              <Link
-                to={`/${parking._id}`}
-                className="text-[#D9D9D9] bg-[#1E1E1E] w-4/5 md:w-[40%] md:h-[14rem] lg:w-[30%] md:mx-2 h-[8rem] relative rounded-md mt-6"
-                key={parking._id}
-              >
-                <div className="flex flex-col justify-between">
-                  <p className="absolute top-4 left-1/2 -translate-x-1/2 text-xl">
-                    {parking.title}
-                  </p>
-                  <div className="absolute bottom-4 right-4">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        navigate(`/update/${parking._id}`);
-                      }}
-                    >
-                      <MdEdit className="text-2xl mr-2" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        deleteParkingHandler(parking._id);
-                      }}
-                    >
-                      <FaTrash className="text-2xl" />
-                    </button>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </>
-      ) : null}
-    </div>
+        <div className="pb-20">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-[30vh]">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+          ) : (
+            <>
+              <MapSection markers={markers} />
+
+              <div className="container mx-auto px-4">
+                {parkings.length === 0 ? (
+                  <EmptyState />
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-bold mb-6 text-white">
+                      Your Parking Spots
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {parkings.map((parking) => (
+                        <ParkingCard
+                          key={parking._id}
+                          id={parking._id}
+                          title={parking.title}
+                          latitude={Number(parking.latitude)}
+                          longitude={Number(parking.longitude)}
+                          createdAt={parking.createdAt}
+                          onDelete={deleteParkingHandler}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="container mx-auto px-4 py-20 text-center">
+          <h1 className="text-4xl font-bold mb-4">Welcome to Parking Finder</h1>
+          <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+            Please sign in to view and manage your parking locations. Save your
+            favorite parking spots and access them anytime.
+          </p>
+          <button
+            className="px-8 py-3 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full text-white font-semibold shadow-lg hover:shadow-orange-500/30 transition-all duration-300 hover:scale-105"
+            onClick={() => (window.location.href = "/login")}
+          >
+            Sign In to Continue
+          </button>
+        </div>
+      )}
+    </PageTransition>
   );
 };
 

@@ -6,8 +6,8 @@ const Navbar = () => {
   const { user } = UserAuth();
   const [showPopup, setShowPopup] = useState(false);
   return (
-    <div className="bg-[#E38A1D] w-4/5 flex justify-between items-center px-4 py-4 rounded-md mt-4 lg:h-[8rem]">
-      <h1 className="text-2xl lg:text-4xl text-[#D9D9D9] font-semibold lg:font-bold">
+    <div className="bg-gradient-to-r from-orange-500 to-amber-500 w-full flex justify-between items-center px-4 py-4 rounded-md lg:h-[8rem]">
+      <h1 className="text-2xl lg:text-4xl text-white font-semibold lg:font-bold">
         <Link to={"/"}>ParkSaver</Link>
       </h1>
       <img

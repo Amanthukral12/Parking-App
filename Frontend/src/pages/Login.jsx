@@ -2,17 +2,14 @@ import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthProvider.jsx";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Mail, User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import PageTransition from "../components/PageTransition";
 import image from "../assets/Front car-pana.webp";
-import { CiMail } from "react-icons/ci";
-import { CiUser } from "react-icons/ci";
-import { CiLock } from "react-icons/ci";
-import { IoEyeOutline } from "react-icons/io5";
-import { IoEyeOffOutline } from "react-icons/io5";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login, isAuthenticated } = UserAuth();
-
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
@@ -31,121 +28,172 @@ const Login = () => {
   });
 
   const { email, userName, password } = user;
-  const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
+
+  const onChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const res = await login({ userName, email, password });
-      toast.success(res.data.message);
+      toast.success(res.data.message, {
+        theme: "dark",
+      });
       navigate("/");
     } catch (error) {
-      if (error.response && error.response.data) {
+      if (error.response?.data) {
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(
           error.response.data,
           "text/html"
         );
-        let errorMessage = htmlDoc.body.textContent.trim();
+        let errorMessage =
+          htmlDoc.body.textContent?.trim() || "An error occurred";
         const index = errorMessage.indexOf("at");
         if (index !== -1) {
-          errorMessage = errorMessage.substring(0, index);
-          errorMessage = errorMessage.replace("Error: ", "");
+          errorMessage = errorMessage
+            .substring(0, index)
+            .replace("Error: ", "");
         }
-        toast.error(errorMessage);
+        toast.error(errorMessage, {
+          theme: "dark",
+        });
       } else {
-        toast.error(error.message);
+        toast.error(error.message, {
+          theme: "dark",
+        });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
-    <div className=" lg:bg-black  h-[100vh] lg:flex lg:justify-center lg:items-center">
-      <div className="w-full h-full z-10 lg:w-4/5 lg:h-4/5 flex flex-col-reverse lg:flex-row">
-        <section className="bg-white h-[70%] w-full lg:w-1/2 lg:h-full flex flex-col items-center lg:rounded-l-3xl">
-          <h1 className="hidden lg:block lg:text-6xl lg:font-bold lg:mt-16 ">
-            ParkSaver
-          </h1>
-          <p className="text-2xl font-semibold mt-10 mb-10">
-            Good to see you again!
-          </p>
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-900 flex items-center justify-center p-4">
+        <div className="w-full max-w-6xl bg-gray-900 rounded-2xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2 p-8 lg:p-12">
+            <div className="max-w-md mx-auto">
+              <h1 className="text-3xl font-bold text-white mb-2">
+                Welcome Back!
+              </h1>
+              <p className="text-gray-400 mb-8">Please sign in to continue</p>
 
-          <form
-            onSubmit={onSubmit}
-            className="flex flex-col w-4/5 space-y-4 md:space-y-6"
-          >
-            <div className="relative">
-              <CiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={onChange}
-                name="email"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#E38A1D] focus:border-transparent outline-none transition text-base md:text-sm"
-              />
-            </div>
-            <div className="relative">
-              <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="UserName"
-                value={userName}
-                onChange={onChange}
-                name="userName"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#E38A1D] focus:border-transparent outline-none transition text-base md:text-sm"
-              />
-            </div>
-            <div className="relative">
-              <CiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={onChange}
-                name="password"
-                className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base md:text-sm"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? (
-                  <IoEyeOffOutline className="h-5 w-5" />
-                ) : (
-                  <IoEyeOutline className="h-5 w-5" />
-                )}
-              </button>
-            </div>
+              <form onSubmit={onSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-400 flex items-center">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Email
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={onChange}
+                      placeholder="Enter your email"
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
 
-            <button
-              type="submit"
-              className="bg-[#E38A1D] rounded-lg text-lg text-white py-1 mt-5 mb-5"
-            >
-              Login
-            </button>
-          </form>
-          <div className="mt-6 space-y-4">
-            <p className="text-center text-gray-600 text-sm md:text-base">
-              Don&apos;t have an account?{" "}
-              <Link
-                to={"/register"}
-                className="text-[#E38A1D] hover:text-orange-600 font-medium"
-              >
-                Sign up here
-              </Link>
-            </p>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-400 flex items-center">
+                    <User className="w-4 h-4 mr-2" />
+                    Username
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="userName"
+                      value={userName}
+                      onChange={onChange}
+                      placeholder="Enter your username"
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-400 flex items-center">
+                    <Lock className="w-4 h-4 mr-2" />
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={password}
+                      onChange={onChange}
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-12"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl text-white font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 hover:scale-[1.02] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <LogIn className="w-5 h-5 mr-2" />
+                      Sign In
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <p className="mt-8 text-center text-gray-400">
+                Don&apos;t have an account?{" "}
+                <Link
+                  to="/register"
+                  className="text-orange-500 hover:text-orange-400 font-medium transition-colors"
+                >
+                  Sign up here
+                </Link>
+              </p>
+            </div>
           </div>
-        </section>
-        <section className="bg-[#E38A1D] w-full h-[30%] lg:h-full flex flex-col justify-center items-center lg:w-1/2 lg:rounded-r-3xl">
-          <img
-            src={image}
-            className="h-[150px] w-[200px] lg:h-[250px] lg:w-[300px]"
-            alt="parksaver image"
-          />
-          <h1 className="text-5xl font-bold">ParkSaver</h1>
-        </section>
+
+          {/* Image Section */}
+          <div className="hidden lg:block w-1/2 bg-gradient-to-br from-orange-500 to-amber-500 p-12">
+            <div className="h-full flex flex-col items-center justify-center">
+              <div className="rounded-2xl  p-8 text-center">
+                <img
+                  src={image}
+                  className="h-[150px] w-[200px] lg:h-[250px] lg:w-[300px]"
+                  alt="parksaver image"
+                />
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  ParkSaver
+                </h2>
+                <p className="text-white/90 text-lg">
+                  Your personal parking companion
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 
