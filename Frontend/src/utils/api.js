@@ -1,13 +1,25 @@
 import axios from "axios";
+import { isTokenExpired } from "./token.js";
 
 const api = axios.create({
-  baseURL: "https://parking-app-y150.onrender.com/",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true,
 });
 
 api.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
+    if (token && isTokenExpired(token)) {
+      try {
+        const response = await refreshToken();
+        const { accessToken } = response.data;
+        localStorage.setItem("token", accessToken);
+        token = accessToken;
+      } catch (error) {
+        console.error("Token refresh failed in request interceptor", error);
+        localStorage.clear();
+      }
+    }
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -48,7 +60,7 @@ export default api;
 async function refreshToken() {
   try {
     const res = await axios.post(
-      "https://parking-app-y150.onrender.com/api/v1/users/refresh-token",
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/refresh-token`,
       {},
       { withCredentials: true }
     );
