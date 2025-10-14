@@ -6,8 +6,13 @@ import {
   uploadOnCloudinary,
 } from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
-import { generateAccessAndRefreshTokens } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
+import Session from "../models/session.model.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateToken.js";
+import mongoose from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, userName, password } = req.body;
@@ -46,9 +51,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const createdUser = await User.findById(user._id).select("-password");
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
@@ -76,13 +79,19 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user._id
-  );
+  const session = new Session({
+    user: user._id,
+    refreshToken: "",
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  });
 
-  const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const refreshToken = generateRefreshToken(user._id, session._id);
+  const accessToken = generateAccessToken(user._id, session._id);
+
+  session.refreshToken = refreshToken;
+  await session.save();
+
+  const loggedInUser = await User.findById(user._id).select("-password");
 
   return res
     .status(200)
@@ -108,11 +117,13 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
-    req.user._id,
-    { $unset: { refreshToken: 1 } },
-    { new: true }
-  );
+  const incomingRefreshToken = req.cookies.refreshToken;
+  if (!incomingRefreshToken) {
+    throw new ApiError(400, "Refresh token is required", [
+      "Refresh token is required",
+    ]);
+  }
+  await Session.findOneAndDelete({ refreshToken: incomingRefreshToken });
   const options = {
     httpOnly: true,
     secure: true,
@@ -128,51 +139,61 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToken) {
-    throw new ApiError(401, "Unauthorized request");
-  }
-  try {
-    const decodeToken = jwt.verify(
-      incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
-    );
-    const user = await User.findById(decodeToken?._id);
-
-    if (!user) {
-      throw new ApiError(401, "Invald refresh token");
-    }
-
-    if (incomingRefreshToken !== user?.refreshToken) {
-      throw new ApiError(401, "Refresh token is expired or used");
-    }
-
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      user._id
-    );
-
-    return res
-      .status(200)
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 15 * 60 * 1000,
-      })
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 10 * 24 * 60 * 60 * 1000,
-      })
-      .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
-  } catch (error) {
     const options = {
       httpOnly: true,
       secure: true,
     };
-    clearCookie("accessToken", options);
-    clearCookie("refreshToken", options);
-    throw new ApiError(401, error?.message || "Invalid refresh token");
+    res.clearCookie("accessToken", options);
+    res.clearCookie("refreshToken", options);
+    throw new ApiError(401, "Unauthorized request", ["Unauthorized request"]);
   }
+
+  const decodeToken = jwt.verify(
+    incomingRefreshToken,
+    process.env.REFRESH_TOKEN_SECRET
+  );
+
+  const session = await Session.findOne({
+    _id: decodeToken.sessionId,
+    refreshToken: incomingRefreshToken,
+  }).select("-refreshToken");
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  if (!session) {
+    res
+      .status(401)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options);
+    throw new ApiError(401, "Invalid session", ["Invalid session"]);
+  }
+
+  if (session.expiresAt < new Date()) {
+    await Session.findByIdAndDelete(session._id);
+
+    res
+      .status(401)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options);
+    throw new ApiError(401, "Session Expired. Please login again", [
+      "Session Expired. Please login again",
+    ]);
+  }
+
+  const accessToken = generateAccessToken(session.user._id, session._id);
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 15 * 60 * 1000,
+    })
+    .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
 });
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {

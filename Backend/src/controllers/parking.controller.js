@@ -40,7 +40,7 @@ const addParking = asyncHandler(async (req, res) => {
     basementLevel: basementLevel || "",
     pillarNumber: pillarNumber || "",
     parkingSlip: parkingSlipImageList || [],
-    owner: req.user.id,
+    owner: req.user,
   });
 
   if (!parking) {
@@ -50,7 +50,7 @@ const addParking = asyncHandler(async (req, res) => {
 });
 
 const getParkings = asyncHandler(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user;
 
   const parkings = await Parking.find({
     owner: userId,
@@ -73,7 +73,7 @@ const deleteParking = asyncHandler(async (req, res) => {
     }
 
     const parkingId = parking._id;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user);
     if (user) {
       await user.parkings.pull(parkingId);
       await user.save();

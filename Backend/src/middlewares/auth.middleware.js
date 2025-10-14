@@ -1,3 +1,4 @@
+import Session from "../models/session.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -8,16 +9,26 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
-      throw new ApiError(401, "Unauthorized request");
+      return next(
+        new ApiError(401, "Unauthorized. Please try again", [
+          "Unauthorized. Please try again",
+        ])
+      );
     }
     const decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decodeToken?._id).select(
-      "-password -refreshToken"
+    const session = await Session.findById(decodeToken?.sessionId).select(
+      "-refreshToken"
     );
-    if (!user) {
-      throw new ApiError(401, "Invalid Access Token");
+    if (!session || session.expiresAt < new Date()) {
+      if (session) {
+        await Session.findByIdAndDelete(session._id);
+      }
+      throw new ApiError(401, "Invalid or expired session", [
+        "Invalid or expired session",
+      ]);
     }
-    req.user = user;
+    req.user = session.user.toString();
+    req.session = session;
     next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid access token");
