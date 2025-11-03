@@ -4,7 +4,7 @@ Parking Application for storing user parking locations using current location tr
 
 ## Demo
 
-LIVE DEMO: (https://aboutparksaver.netlify.app/)
+LIVE DEMO: (https://aboutparksaver.amanthukral.com/)
 
 ## Features
 
